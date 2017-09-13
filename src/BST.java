@@ -77,10 +77,120 @@ public class BST<T extends Comparable<? super T>> {
 	}
 
 	public boolean remove( T x ) { 
-		return false;
+
+		T temp = findHelper(x, root);
+		if(temp == null) {
+			return false;
+		}
+
+		if(root.element.compareTo(x) < 0) {
+			root = remove(x, root, root.left, 0);
+		}
+		else if(root.element.compareTo(x) > 0) {
+			root = remove(x, root, root.right, 1);
+		}
+		else {
+			root = remove(x, null, root, 2);
+
+		}
+		return true;
+
+		// if(pSize != currentSize) {
+		//     pool.right = new BinaryNode(null, pool, null);
+		//     currentSize++;
+		// }
+
 	}
 
-	public void clear( ) { 
+	private BinaryNode remove(T x, BinaryNode parent, BinaryNode node, Integer left) {
+
+		if(node == null) {
+			return null;
+		}
+
+		if(node.element.compareTo(x) < 0) {
+			node.left =  remove(x, node, node.left, 0);
+		}
+		else if(node.element.compareTo(x) > 0) {
+			node.right = remove(x, node, node.right, 1);
+		}
+		else { //found node
+
+			if(node.right == null && node.left == null) {
+				if(left  == 0) {
+					parent.left = null;
+					node = null;
+				}
+				else if(left == 1) {
+					parent.right = null;
+					node = null;
+				}
+				else {
+					node = null;
+				}
+			}
+			else if(node.left == null) {
+
+				node =  node.right;
+				//node.right = remove(x, node, node.right, 1);
+			}
+			else if(node.right == null ) {
+				node =  node.left;
+				//node.left = remove(x, node, node.left, 0);
+			}
+
+			else {
+				//find the node rMin that hold minimum value in right subtree
+				BinaryNode t = node;
+				BinaryNode rMin = findRMin(t.right);
+				//replace the current node with rMin element
+
+				// node = deleteRMin(node.right);
+				node.right = remove(rMin.element, t, t.right, 1);
+				node = rMin;
+				node.left = t.left; 
+
+				//  return node;
+				//recursive deletion of the rMin
+			}
+		}
+
+		return node;
+	}
+
+
+	//Find the minimum value in right subtree
+	private BinaryNode findRMin(BinaryNode node) {
+		if(node == null) {
+			return null;
+		}
+		else if(node.left == null) {
+			return node;
+		}
+		else {
+
+			return findRMin(node.left);
+		}
+	}
+
+	public void clear() {
+
+		inOrderDeletion(root);
+
+
+	}
+
+
+	private void inOrderDeletion(BinaryNode node) {
+		if(node == null) {
+			return;
+		}
+
+		inOrderDeletion(node.left);
+		node = null;	
+		inOrderDeletion(node.right);
+
+
 	}
 
 	public boolean equals(Object other) { 
