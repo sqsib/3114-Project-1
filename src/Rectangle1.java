@@ -6,10 +6,27 @@ public class Rectangle1 {
 		
 		BST<Integer> test = new BST<Integer>();
 		
-		boolean t = test.insert(5);
-		System.out.println(t);
-		Integer toto = test.find(5);
-		System.out.println(toto);
+		test.insert(5);
+		test.insert(4);
+		test.insert(7);
+		test.insert(6);
+//		test.printTree();
+		test.clear();
+		test.printTree();
+//		
+//		BST<Integer> test2 = new BST<Integer>();
+//		test2.insert(5);
+//		test2.insert(4);
+//		test2.insert(7);
+//		//test2.insert(6);
+//		
+//		System.out.println(test.equals(test2));
+
+		//System.out.println(test.find(5));
+	
+		
+		
+		
 		
 
 	}

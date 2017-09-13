@@ -77,78 +77,76 @@ public class BST<T extends Comparable<? super T>> {
 	}
 
 	public boolean remove( T x ) { 
-
-		T temp = findHelper(x, root);
-		if(temp == null) {
+		//System.out.println("wtf");
+		if(x == null) {
+			System.out.println("x is null");
 			return false;
 		}
 
-		if(root.element.compareTo(x) < 0) {
-			root = remove(x, root, root.left, 0);
-		}
-		else if(root.element.compareTo(x) > 0) {
-			root = remove(x, root, root.right, 1);
-		}
-		else {
-			root = remove(x, null, root, 2);
-
-		}
+//		if(root.element.compareTo(x) < 0) {
+//			root = remove(x, root.left);
+//		}
+//		else if(root.element.compareTo(x) > 0) {
+//			root = remove(x,root.right);
+//		}
+//		else {
+//			root = remove(x, root);
+//
+//		}
+//		return true;
+		
+		remove(x, root);
 		return true;
 
-		// if(pSize != currentSize) {
-		//     pool.right = new BinaryNode(null, pool, null);
-		//     currentSize++;
-		// }
 
 	}
 
-	private BinaryNode remove(T x, BinaryNode parent, BinaryNode node, Integer left) {
+	private BinaryNode remove(T x, BinaryNode node) {
 
 		if(node == null) {
+			System.out.println("node is null");
 			return null;
 		}
 
 		if(node.element.compareTo(x) < 0) {
-			node.left =  remove(x, node, node.left, 0);
+			node.right =  remove(x, node.right);
 		}
 		else if(node.element.compareTo(x) > 0) {
-			node.right = remove(x, node, node.right, 1);
+			node.left = remove(x, node.left);
 		}
 		else { //found node
 
 			if(node.right == null && node.left == null) {
-				if(left  == 0) {
-					parent.left = null;
-					node = null;
-				}
-				else if(left == 1) {
-					parent.right = null;
-					node = null;
-				}
-				else {
-					node = null;
-				}
+				System.out.println("First if statement");
+				node = null;
 			}
 			else if(node.left == null) {
 
 				node =  node.right;
+				System.out.println("2nd if statement");
+
 				//node.right = remove(x, node, node.right, 1);
 			}
 			else if(node.right == null ) {
+				System.out.println("3rd if statement");
+
 				node =  node.left;
 				//node.left = remove(x, node, node.left, 0);
 			}
 
 			else {
-				//find the node rMin that hold minimum value in right subtree
-				BinaryNode t = node;
-				BinaryNode rMin = findRMin(t.right);
-				//replace the current node with rMin element
+				System.out.println("else  statement");
 
+				//find the node rMin that hold minimum value in right subtree
+				//BinaryNode t = node;
+				BinaryNode rMin = findRMin(node.right);
+				System.out.println("rmin is  " + rMin.element);
+				//replace the current node with rMin element
+				node.element = rMin.element;
 				// node = deleteRMin(node.right);
-				node.right = remove(rMin.element, t, t.right, 1);
-				node = rMin;
-				node.left = t.left; 
+				node.right = remove(rMin.element, node.right);
+			
+				//node.left = t.left; 
 
 				//  return node;
 				//recursive deletion of the rMin
@@ -175,20 +173,24 @@ public class BST<T extends Comparable<? super T>> {
 
 	public void clear() {
 
-		inOrderDeletion(root);
+		root = deleteTree(root);
 
 
 	}
 
 
-	private void inOrderDeletion(BinaryNode node) {
+	private BinaryNode deleteTree(BinaryNode node) {
 		if(node == null) {
-			return;
+			return null;
 		}
+		
+		node.left = deleteTree(node.left);
+		node.right = deleteTree(node.right);
+		node = null;
 
-		inOrderDeletion(node.left);
-		node = null;	
-		inOrderDeletion(node.right);
+		
+		return node;
+		
 
 
 	}
@@ -238,10 +240,19 @@ public class BST<T extends Comparable<? super T>> {
 				return false;
 			}
 		}
+	}
+	public void printTree() {
+		inOrderPrint(root);
+	}
 
-
+	private void inOrderPrint(BinaryNode node) {
+		if(node == null) 
+			return;
+		inOrderPrint(node.left);
+		System.out.println(node.element);
+		inOrderPrint(node.right);
 
 	}
-	// private methods follow
-
 }
+
+
